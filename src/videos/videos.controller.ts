@@ -22,7 +22,7 @@ export class VideosController {
     }
 
     @Post('/getOne')
-    @HttpCode(HttpStatus.CREATED)
+    @HttpCode(HttpStatus.OK)
     getOne(@Body('animeId') animeId, @Body('season') season, @Body('episode') episode): Promise<Video>{
         return this.videoService.getOne(animeId, season, episode)
     }
