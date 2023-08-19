@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Patch, Post, Put} from '@nestjs/common';
 import {CollectionsService} from "./collections.service";
 import {CreateCollectionDto} from "./dto/create-collection.dto";
 import {UpdateCollectionDto} from "./dto/update-collection.dto";
@@ -24,6 +24,15 @@ export class CollectionsController {
         return this.collectionService.getMultiply(collections)
     }
 
+    @Get('/popular')
+    getPopular(): Promise<Collection[]> {
+        return this.collectionService.getPopular()
+    }
+
+    @Patch('/updatePopularity')
+    updatePopularity(@Body('animeId') animeId): Promise<Collection> {
+        return this.collectionService.updatePopularity(animeId)
+    }
 
     @Post()
     create(@Body() createCollectionDto: CreateCollectionDto, @Body('token') token): Promise<Collection> {

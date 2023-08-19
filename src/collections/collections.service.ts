@@ -32,7 +32,6 @@ export class CollectionsService {
     async create(createCollectionDto: CreateCollectionDto, token): Promise<Collection> {
         const decodedToken = jwt.verify(token, process.env.JWT_KEY);
         if (decodedToken) {
-            // Теперь вы можете использовать decodedToken для доступа к данным в токене
             const newCollection = new this.collectionModel(createCollectionDto);
             return newCollection.save();
         } else {
@@ -47,6 +46,26 @@ export class CollectionsService {
         } else {
             throw new Error('Пользователь не авторизован')
         }
+    }
+
+    async updatePopularity(animeId): Promise<Collection> {
+        const anime = await this.collectionModel.findOne({_id: animeId})
+
+        if(anime) {
+            anime.likes = anime.likes + 1
+
+            await anime.save()
+
+            return anime
+        }
+    }
+
+    async getPopular(): Promise<Collection[]> {
+        return await this.collectionModel
+            .find()
+            .sort({ likes: -1 })
+            .limit(9)
+            .exec();
     }
 
     async remove(id: string, token): Promise<Collection> {
