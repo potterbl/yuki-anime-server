@@ -12,16 +12,16 @@ export class CollectionsService {
     constructor(@InjectModel(Collection.name) private collectionModel: Model<CollectionDocument>) {
     }
     
-    async getAll() {
+    async getAll(): Promise<Collection[] | Collection> {
         return this.collectionModel.find().exec()
     }
 
-    async getById(id: string) {
-        return this.collectionModel.findById(id)
+    async getById(id: string): Promise<Collection> {
+        return this.collectionModel.findById({_id: id})
     }
 
-    async getMultiply(collections: string[]) {
-        const result: object[] = [];
+    async getMultiply(collections: string[]): Promise<Collection[]> {
+        const result: Collection[] = [];
         for (const id of collections) {
             const item = await this.collectionModel.findOne({ _id: id });
             result.push(item);
@@ -29,7 +29,7 @@ export class CollectionsService {
         return result;
     }
 
-    async create(createCollectionDto: CreateCollectionDto, token) {
+    async create(createCollectionDto: CreateCollectionDto, token): Promise<Collection> {
         const decodedToken = jwt.verify(token, process.env.JWT_KEY);
         if (decodedToken) {
             // Теперь вы можете использовать decodedToken для доступа к данным в токене
@@ -40,7 +40,7 @@ export class CollectionsService {
         }
     }
 
-    async update(updateCollectionDto: UpdateCollectionDto, id, token) {
+    async update(updateCollectionDto: UpdateCollectionDto, id, token): Promise<Collection> {
         const candidate = jwt.verify(token, process.env.JWT_KEY)
         if(candidate){
             return this.collectionModel.findByIdAndUpdate(id, updateCollectionDto)
@@ -49,7 +49,7 @@ export class CollectionsService {
         }
     }
 
-    async remove(id: string, token) {
+    async remove(id: string, token): Promise<Collection> {
         const candidate = jwt.verify(token, process.env.JWT_KEY)
         if(candidate){
             return this.collectionModel.findByIdAndDelete(id)

@@ -17,19 +17,25 @@ export class VideosController {
 
     @Get(':id')
     @HttpCode(HttpStatus.OK)
-    getById(@Param('id') id: string): Promise<Video>{
+    getById(@Param('id') id: string): Promise<Video[] | Video>{
         return this.videoService.getById(id)
+    }
+
+    @Post('/getOne')
+    @HttpCode(HttpStatus.CREATED)
+    getOne(@Body('animeId') animeId, @Body('season') season, @Body('episode') episode): Promise<Video>{
+        return this.videoService.getOne(animeId, season, episode)
     }
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() createVideoDto: CreateVideoDto): Promise<Video>{
-        return this.videoService.create(createVideoDto)
+    create(@Body() createVideoDto: CreateVideoDto, @Body('token') token): Promise<Video>{
+        return this.videoService.create(createVideoDto, token)
     }
 
     @Delete(':id')
     @HttpCode(HttpStatus.OK)
-    remove(@Param('id') id: string): Promise<Video>{
-        return this.videoService.removeById(id)
+    remove(@Param('id') id: string, @Body('token') token): Promise<Video>{
+        return this.videoService.removeById(id, token)
     }
 }

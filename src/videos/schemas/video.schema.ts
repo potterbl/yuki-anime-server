@@ -6,7 +6,13 @@ export type VideoDocument = Video & Document
 @Schema()
 export class Video{
     @Prop()
-    title: string
+    animeId: string
+
+    @Prop()
+    episode: string
+
+    @Prop()
+    season: string
 
     @Prop()
     link: string
