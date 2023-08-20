@@ -8,7 +8,7 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGOOSE_URI),
+    MongooseModule.forRoot('mongodb+srv://pxtter:vladvador08@yuki.nkthlzn.mongodb.net/?retryWrites=true&w=majority'),
     CollectionsModule,
     VideosModule,
     AuthModule,
