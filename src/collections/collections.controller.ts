@@ -39,7 +39,7 @@ export class CollectionsController {
         return this.collectionService.create(createCollectionDto, token)
     }
 
-    @Put(':id')
+    @Patch(':id')
     update(@Body() updateCollectionDto: UpdateCollectionDto, @Param('id') id, @Body('token') token): Promise<Collection> {
         return this.collectionService.update(updateCollectionDto, id, token)
     }
