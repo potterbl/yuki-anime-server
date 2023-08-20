@@ -5,10 +5,14 @@ import { AppService } from './app.service';
 import { VideosModule } from './videos/videos.module';
 import { CollectionsModule } from './collections/collections.module';
 import { AuthModule } from './auth/auth.module';
+import {MulterModule} from "@nestjs/platform-express";
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://pxtter:vladvador08@yuki.nkthlzn.mongodb.net/?retryWrites=true&w=majority'),
+    MongooseModule.forRoot(process.env.MONGOOSE_URI),
+      MulterModule.register({
+        dest: './uploads',
+      }),
     CollectionsModule,
     VideosModule,
     AuthModule,
