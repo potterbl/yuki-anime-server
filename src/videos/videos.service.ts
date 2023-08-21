@@ -47,12 +47,14 @@ export class VideosService{
         }
     }
 
-    async uploadVideo(token, file){
+    async uploadVideo(token, video, preview, image){
         try{
             const candidate: any = jwt.verify(token, process.env.JWT_KEY)
 
             if(candidate._id === '64e3500d5aecf660abf0ede2'){
-                console.log(file)
+                console.log(video)
+                console.log(preview)
+                console.log(image)
             } else {
                 throw new UnauthorizedException()
             }

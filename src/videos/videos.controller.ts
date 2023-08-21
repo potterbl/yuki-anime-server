@@ -53,8 +53,10 @@ export class VideosController {
 
     @Post('/uploadVideo')
     @UseInterceptors(FilesInterceptor('video'))
-    uploadFile(@UploadedFiles() file, @Body('token') token){
-        return this.videoService.uploadVideo(token, file)
+    @UseInterceptors(FilesInterceptor('preview'))
+    @UseInterceptors(FilesInterceptor('image'))
+    uploadFile(@UploadedFiles() video, @UploadedFiles() preview, @UploadedFiles() image, @Body('token') token){
+        return this.videoService.uploadVideo(token, video, preview, image)
     }
 
     @Get('/getVideo/:videoPath')
