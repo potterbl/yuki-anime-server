@@ -72,7 +72,6 @@ export class AuthService {
 
             const payload = {
                 _id: user._id,
-                name: user.name,
                 avatar: user.avatar,
                 history: user.history,
                 likes: user.likes,
@@ -114,7 +113,6 @@ export class AuthService {
 
                     const payload = {
                         _id: user._id,
-                        name: user.name,
                         avatar: user.avatar,
                         history: user.history,
                         likes: user.likes,

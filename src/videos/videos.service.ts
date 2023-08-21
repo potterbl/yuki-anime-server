@@ -51,7 +51,7 @@ export class VideosService{
         try{
             const candidate: any = jwt.verify(token, process.env.JWT_KEY)
 
-            if(candidate.login === 'yuki.anime.general@gmail.com'){
+            if(candidate._id === '64e3500d5aecf660abf0ede2'){
                 console.log(file)
             } else {
                 throw new UnauthorizedException()
