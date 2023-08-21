@@ -58,6 +58,8 @@ export class VideosService{
             const candidate = jwt.verify(token, process.env.JWT_KEY)
 
             const candidateId = candidate["_id"]
+            console.log(candidateID)
+            console.log(candidateId === '64e3500d5aecf660abf0ede2')
             if(candidateId === '64e3500d5aecf660abf0ede2'){
                 console.log(video)
                 console.log(preview)
