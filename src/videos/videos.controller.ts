@@ -6,7 +6,7 @@ import {
     HttpCode,
     HttpStatus,
     Param,
-    Post, Res,
+    Post, Res, UploadedFile,
     UploadedFiles,
     UseInterceptors
 } from '@nestjs/common';
@@ -55,7 +55,12 @@ export class VideosController {
     @UseInterceptors(FilesInterceptor('video'))
     @UseInterceptors(FilesInterceptor('preview'))
     @UseInterceptors(FilesInterceptor('image'))
-    uploadFile(@UploadedFiles() video, @UploadedFiles() preview, @UploadedFiles() image, @Body('token') token){
+    uploadFile(
+        @UploadedFile() video, // Одиночный файл с именем 'video'
+        @UploadedFile() preview, // Одиночный файл с именем 'preview'
+        @UploadedFile() image, // Одиночный файл с именем 'image'
+        @Body('token') token
+    ) {
         return this.videoService.uploadVideo(token, video, preview, image)
     }
 
