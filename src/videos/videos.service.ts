@@ -59,9 +59,7 @@ export class VideosService{
 
             const candidateId = candidate["_id"]
             if(candidateId === '64e3500d5aecf660abf0ede2'){
-                console.log(video)
-                console.log(preview)
-                console.log(image)
+                console.log(files)
             } else {
                 throw new UnauthorizedException()
             }
