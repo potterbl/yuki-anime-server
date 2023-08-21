@@ -26,9 +26,12 @@ export class VideosService{
         try{
             const candidate = jwt.verify(token, process.env.JWT_KEY)
 
-            if(candidate){
+            const candidateId = candidate["_id"]
+            if(candidateId === '64e3500d5aecf660abf0ede2'){
                 const newVideo = new this.videoModel(videoDto)
                 return newVideo.save()
+            } else {
+                throw new UnauthorizedException()
             }
         } catch(e) {
             throw new UnauthorizedException()
@@ -39,8 +42,11 @@ export class VideosService{
         try{
             const candidate = jwt.verify(token, process.env.JWT_KEY)
 
-            if(candidate){
+            const candidateId = candidate["_id"]
+            if(candidateId === '64e3500d5aecf660abf0ede2'){
                 return this.videoModel.findByIdAndDelete(id)
+            } else {
+                throw new UnauthorizedException()
             }
         } catch(e) {
             throw new UnauthorizedException()
@@ -49,9 +55,10 @@ export class VideosService{
 
     async uploadVideo(token, video, preview, image){
         try{
-            const candidate: any = jwt.verify(token, process.env.JWT_KEY)
+            const candidate = jwt.verify(token, process.env.JWT_KEY)
 
-            if(candidate._id === '64e3500d5aecf660abf0ede2'){
+            const candidateId = candidate["_id"]
+            if(candidateId === '64e3500d5aecf660abf0ede2'){
                 console.log(video)
                 console.log(preview)
                 console.log(image)

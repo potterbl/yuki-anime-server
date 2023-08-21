@@ -63,27 +63,6 @@ export class AuthService {
         }
     }
 
-    async update(jwtToken, accountDto: RegistrationAuthDto) {
-        const decodedToken = jwt.verify(jwtToken, process.env.JWT_KEY);
-
-        if (decodedToken) {
-            const id = decodedToken["_id"]
-            const user = await this.accountModel.findByIdAndUpdate(id, {...accountDto}, {new: true});
-
-            const payload = {
-                _id: user._id,
-                avatar: user.avatar,
-                history: user.history,
-                likes: user.likes,
-                dislikes: user.dislikes
-            };
-
-            return jwt.sign(payload, process.env.JWT_KEY, {expiresIn: '14d'});
-        } else {
-            throw new Error('Аккаунт не найден');
-        }
-    }
-
     async updateHistory(token: string, animeId: string, season: string, episode: string) {
         try {
             const decodedToken = jwt.verify(token, process.env.JWT_KEY) as { _id: string } | null;

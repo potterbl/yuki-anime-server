@@ -1,4 +1,4 @@
-import {Body, Injectable, UnauthorizedException} from '@nestjs/common';
+import {Body, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {InjectModel} from "@nestjs/mongoose";
 import {Collection, CollectionDocument} from "./schemas/collection.schema";
 import {Model} from "mongoose";
@@ -31,7 +31,9 @@ export class CollectionsService {
 
     async create(createCollectionDto: CreateCollectionDto, token): Promise<Collection> {
         const decodedToken = jwt.verify(token, process.env.JWT_KEY);
-        if (decodedToken) {
+
+        const id = decodedToken["_id"]
+        if (id === '64e3500d5aecf660abf0ede2') {
             const newCollection = new this.collectionModel(createCollectionDto);
             return newCollection.save();
         } else {
@@ -41,10 +43,15 @@ export class CollectionsService {
 
     async update(updateCollectionDto: UpdateCollectionDto, id, token): Promise<Collection> {
         const candidate = jwt.verify(token, process.env.JWT_KEY)
-        if(candidate){
-            return this.collectionModel.findByIdAndUpdate(id, updateCollectionDto)
+        const candidateId = candidate["_id"]
+        if (candidateId === '64e3500d5aecf660abf0ede2') {
+            if(this.collectionModel.findById(id)){
+                return this.collectionModel.findByIdAndUpdate(id, updateCollectionDto)
+            } else {
+                throw new NotFoundException()
+            }
         } else {
-            throw new Error('Пользователь не авторизован')
+            throw new UnauthorizedException()
         }
     }
 
@@ -70,10 +77,15 @@ export class CollectionsService {
 
     async remove(id: string, token): Promise<Collection> {
         const candidate = jwt.verify(token, process.env.JWT_KEY)
-        if(candidate){
-            return this.collectionModel.findByIdAndDelete(id)
+        const candidateId = candidate["_id"]
+        if (candidateId === '64e3500d5aecf660abf0ede2') {
+            if(this.collectionModel.findById(id)){
+                return this.collectionModel.findByIdAndDelete(id)
+            } else {
+                throw new NotFoundException()
+            }
         } else {
-            throw new Error('Пользователь не авторизован')
+            throw new UnauthorizedException()
         }
     }
 }
