@@ -53,7 +53,7 @@ export class VideosService{
         }
     }
 
-    async uploadVideo(token, video, preview, image){
+    async uploadVideo(token, files){
         try{
             const candidate = jwt.verify(token, process.env.JWT_KEY)
 
