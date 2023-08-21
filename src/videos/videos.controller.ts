@@ -51,16 +51,14 @@ export class VideosController {
         return this.videoService.removeById(id, token)
     }
 
-    @Post('/uploadVideo')
-    @UseInterceptors(FilesInterceptor('video'))
-    @UseInterceptors(FilesInterceptor('preview'))
-    @UseInterceptors(FilesInterceptor('image'))
-    uploadFile(@UploadedFiles() files, @Body('token') token){
-        return this.videoService.uploadVideo(token, files)
+    @Post('/uploadFile')
+    @UseInterceptors(FilesInterceptor('file'))
+    uploadFile(@UploadedFiles() file, @Body('token') token){
+        return this.videoService.uploadFile(token, file)
     }
 
-    @Get('/getVideo/:videoPath')
-    getVideo(@Param('videoPath') video,@Res() res) {
-        res.sendFile(video, {root: 'uploads'})
+    @Get('/getFile/:fileName')
+    getVideo(@Param('fileName') file,@Res() res) {
+        res.sendFile(file, {root: 'uploads'})
     }
 }
