@@ -53,9 +53,11 @@ export class VideosService{
 
             if(candidate.login === 'yuki.anime.general@gmail.com'){
                 console.log(file)
+            } else {
+                throw new UnauthorizedException()
             }
         } catch(err) {
-
+            throw new UnauthorizedException()
         }
     }
 }
