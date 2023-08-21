@@ -10,15 +10,4 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
-
-  @Post('/uploadvideo')
-  @UseInterceptors(FilesInterceptor('video'))
-  uploadFile(@UploadedFiles() file){
-    console.log(file)
-  }
-
-  @Get('/getvideo/:videopath')
-  getVideo(@Param('videopath') video,@Res() res) {
-    res.sendFile(video, {root: 'uploads'})
-  }
 }

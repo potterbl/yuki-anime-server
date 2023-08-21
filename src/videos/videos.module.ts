@@ -4,6 +4,9 @@ import {VideosService} from "./videos.service";
 import {MongooseModule} from "@nestjs/mongoose";
 import {Video, VideoSchema} from "./schemas/video.schema";
 import {Account, AccountSchema} from "../auth/schemas/account.schema";
+import {MulterModule, MulterModuleOptions} from "@nestjs/platform-express";
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @Module({
     providers: [VideosService],
@@ -11,7 +14,24 @@ import {Account, AccountSchema} from "../auth/schemas/account.schema";
     imports: [MongooseModule.forFeature([
         {name: Video.name, schema: VideoSchema},
         {name: Account.name, schema: AccountSchema}
-    ])]
+    ]),
+        MulterModule.registerAsync({
+            useFactory: () => {
+                const storageOptions: MulterModuleOptions['storage'] = diskStorage({
+                    destination: './uploads',
+                    filename: (_, file, callback) => {
+                        const name = file.originalname.split('.')[0];
+                        const fileExtName = extname(file.originalname);
+                        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                        callback(null, `${name}-${uniqueSuffix}${fileExtName}`);
+                    },
+                });
+                return {
+                    storage: storageOptions,
+                };
+            },
+        }),
+    ]
 })
 
 export class VideosModule {

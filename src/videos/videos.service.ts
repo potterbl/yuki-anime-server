@@ -46,4 +46,16 @@ export class VideosService{
             throw new UnauthorizedException()
         }
     }
+
+    async uploadVideo(token, file){
+        try{
+            const candidate: any = jwt.verify(token, process.env.JWT_KEY)
+
+            if(candidate.login === 'yuki.anime.general@gmail.com'){
+                console.log(file)
+            }
+        } catch(err) {
+
+        }
+    }
 }

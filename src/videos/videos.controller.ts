@@ -1,7 +1,19 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post} from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Param,
+    Post, Res,
+    UploadedFiles,
+    UseInterceptors
+} from '@nestjs/common';
 import {CreateVideoDto} from "./videoDto/create-video.dto";
 import {VideosService} from "./videos.service";
 import {Video} from "./schemas/video.schema";
+import {FilesInterceptor} from "@nestjs/platform-express";
 
 @Controller('videos')
 export class VideosController {
@@ -37,5 +49,16 @@ export class VideosController {
     @HttpCode(HttpStatus.OK)
     remove(@Param('id') id: string, @Body('token') token): Promise<Video>{
         return this.videoService.removeById(id, token)
+    }
+
+    @Post('/uploadVideo')
+    @UseInterceptors(FilesInterceptor('video'))
+    uploadFile(@UploadedFiles() file, @Body('token') token){
+        return this.videoService.uploadVideo(token, file)
+    }
+
+    @Get('/getVideo/:videoPath')
+    getVideo(@Param('videoPath') video,@Res() res) {
+        res.sendFile(video, {root: 'uploads'})
     }
 }
