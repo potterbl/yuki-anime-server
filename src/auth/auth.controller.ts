@@ -10,12 +10,12 @@ export class AuthController {
     }
 
     @Post('/login')
-    login(@Body() loginDto: LoginAuthDto): Promise<string> {
+    login(@Body() loginDto: LoginAuthDto): Promise<{token: string}>{
         return this.authService.login(loginDto)
     }
 
     @Post('/registration')
-    registration (@Body() registrationDto: RegistrationAuthDto): Promise<string> {
+    registration (@Body() registrationDto: RegistrationAuthDto): Promise<{token: string}>{
         return this.authService.registration(registrationDto)
     }
 
@@ -25,7 +25,7 @@ export class AuthController {
     }
 
     @Patch('/updateHistory')
-    updateHistory(@Body('token') token, @Body('animeId') animeId, @Body('season') season, @Body('episode') episode) {
+    updateHistory(@Body('token') token, @Body('animeId') animeId, @Body('season') season, @Body('episode') episode): Promise<{token: string}> {
         return this.authService.updateHistory(token, animeId, season, episode)
     }
 
