@@ -61,7 +61,7 @@ export class AuthService {
         try {
             return jwt.verify(token, process.env.JWT_KEY);
         } catch (err) {
-            return err
+            throw new UnauthorizedException()
         }
     }
 
