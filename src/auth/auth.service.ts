@@ -29,6 +29,8 @@ export class AuthService {
             };
 
             return jwt.sign(payload, process.env.JWT_KEY, {expiresIn: '14d'})
+        } else if(isExist && isExist.password !== loginDto.password) {
+            throw new UnauthorizedException()
         }
     }
 
