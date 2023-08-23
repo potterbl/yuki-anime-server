@@ -2,6 +2,7 @@ import {Body, Controller, Get, Header, Patch, Post, Put} from '@nestjs/common';
 import {AuthService} from "./auth.service";
 import {RegistrationAuthDto} from "./dto/registration-auth.dto";
 import {LoginAuthDto} from "./dto/login-auth.dto";
+import * as jwt from "jsonwebtoken";
 
 @Controller('auth')
 export class AuthController {
@@ -20,7 +21,7 @@ export class AuthController {
     }
 
     @Post('/getMe')
-    getMe(@Body('token') token: string): Promise<object> {
+    getMe(@Body('token') token: string): Promise<string | jwt.JwtPayload> {
         return this.authService.getMe(token)
     }
 

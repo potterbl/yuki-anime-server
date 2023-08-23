@@ -57,7 +57,7 @@ export class AuthService {
         }
     }
 
-    async getMe(token: string) {
+    async getMe(token: string): Promise<string | jwt.JwtPayload> {
         try {
             return jwt.verify(token, process.env.JWT_KEY);
         } catch (err) {
