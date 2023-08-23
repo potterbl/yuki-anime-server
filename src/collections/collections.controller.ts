@@ -14,7 +14,7 @@ export class CollectionsController {
         return this.collectionService.getAll()
     }
 
-    @Get(':id')
+    @Get('/id/:id')
     getById(@Param('id') id): Promise<Collection> {
         return this.collectionService.getById(id)
     }

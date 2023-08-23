@@ -68,11 +68,15 @@ export class CollectionsService {
     }
 
     async getPopular(): Promise<Collection[]> {
-        return await this.collectionModel
-            .find()
-            .sort({ likes: -1 })
-            .limit(9)
-            .exec();
+        try{
+            return await this.collectionModel
+                .find()
+                .sort({ likes: -1 })
+                .limit(9)
+                .exec();
+        } catch(err) {
+            throw new Error()
+        }
     }
 
     async remove(id: string, token): Promise<Collection> {
