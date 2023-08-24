@@ -5,14 +5,15 @@ import {Account, AccountDocument, historyType} from "./schemas/account.schema";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 import * as jwt from 'jsonwebtoken';
+import {MailerService} from "@nestjs-modules/mailer";
 
 @Injectable()
 export class AuthService {
 
-    constructor(@InjectModel(Account.name) private accountModel: Model<AccountDocument>) {
+    constructor(@InjectModel(Account.name) private accountModel: Model<AccountDocument>, private readonly mailerService: MailerService) {
     }
 
-    async login(loginDto: LoginAuthDto) {
+    async login(loginDto: LoginAuthDto): Promise<{token: string}>{
         const candidate = loginDto.login
         const isExist = await this.accountModel.findOne({login: candidate}).exec()
 
@@ -21,8 +22,6 @@ export class AuthService {
         } else if (isExist && isExist.password === loginDto.password) {
             const payload = {
                 _id: isExist._id,
-                name: isExist.name,
-                avatar: isExist.avatar,
                 history: isExist.history,
                 likes: isExist.likes,
                 dislikes: isExist.dislikes
@@ -34,7 +33,7 @@ export class AuthService {
         }
     }
 
-    async registration(registrationDto: RegistrationAuthDto) {
+    async registration(registrationDto: RegistrationAuthDto): Promise<{token: string}>{
         const candidate = registrationDto.login;
         const existingAccount = await this.accountModel.findOne({login: candidate}).exec();
 
@@ -46,8 +45,6 @@ export class AuthService {
 
             const payload = {
                 _id: newAccount._id,
-                name: newAccount.name,
-                avatar: newAccount.avatar,
                 history: newAccount.history,
                 likes: newAccount.likes,
                 dislikes: newAccount.dislikes
@@ -65,7 +62,7 @@ export class AuthService {
         }
     }
 
-    async updateHistory(token: string, animeId: string, season: string, episode: string) {
+    async updateHistory(token: string, animeId: string, season: string, episode: string): Promise<{token: string}> {
         try {
             const decodedToken = jwt.verify(token, process.env.JWT_KEY) as { _id: string } | null;
 
@@ -94,7 +91,6 @@ export class AuthService {
 
                     const payload = {
                         _id: user._id,
-                        avatar: user.avatar,
                         history: user.history,
                         likes: user.likes,
                         dislikes: user.dislikes
@@ -111,4 +107,70 @@ export class AuthService {
             throw new UnauthorizedException();
         }
     }
+
+    async resetMailSend(email): Promise<{message: string}> {
+        const candidate = await this.accountModel.findOne({login: email}).exec();
+
+            if(candidate){
+                const payload = {
+                    _id: candidate._id,
+                    login: candidate.login,
+                    updatable: true
+                }
+
+                const jwtToken = jwt.sign(payload, process.env.JWT_KEY, {expiresIn: '30m'})
+
+                await this.mailerService
+                    .sendMail({
+                        to: email,
+                        from: 'yuki.anime.general@gmail.com',
+                        subject: 'Reset password',
+                        text: 'Your reset link... \n' +
+                            `http://localhost:4000/reset/${jwtToken}`
+                    })
+                    .then(res => {
+                        console.log(res)
+                    })
+                    .catch(err => {
+                        throw new Error()
+                    })
+                return {message: 'Письмо отправленно. Проверьте вашу почту'}
+            } else{
+                throw new NotFoundException()
+            }
+    }
+
+    async resetPassword(token, newPassword): Promise<{token: string}> {
+        const candidate = jwt.verify(token, process.env.JWT_KEY);
+
+        if (candidate) {
+            if (candidate["updatable"] === true) {
+                const updatedCandidate = await this.accountModel.findByIdAndUpdate(
+                    candidate["_id"],
+                    { password: newPassword },
+                    { new: true }
+                ).exec();
+
+                if (updatedCandidate) {
+                    const payload = {
+                        _id: updatedCandidate._id,
+                        history: updatedCandidate.history,
+                        likes: updatedCandidate.likes,
+                        dislikes: updatedCandidate.dislikes
+                    };
+
+                    return {
+                        token: jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '14d' })
+                    };
+                } else {
+                    throw new NotFoundException();
+                }
+            } else {
+                throw new UnauthorizedException();
+            }
+        } else {
+            throw new UnauthorizedException();
+        }
+    }
+
 }

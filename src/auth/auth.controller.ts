@@ -30,4 +30,14 @@ export class AuthController {
         return this.authService.updateHistory(token, animeId, season, episode)
     }
 
+    @Post('/sendReset')
+    resetMailSend(@Body('email') email): Promise<{message: string}>{
+        return this.authService.resetMailSend(email)
+    }
+
+    @Post('/reset')
+    reset(@Body('token') token, @Body('password') password): Promise<{token: string}>{
+        return this.authService.resetPassword(token, password)
+    }
+
 }
