@@ -20,10 +20,7 @@ import { extname } from 'path';
                 const storageOptions: MulterModuleOptions['storage'] = diskStorage({
                     destination: './uploads',
                     filename: (_, file, callback) => {
-                        const name = file.originalname.split('.')[0];
-                        const fileExtName = extname(file.originalname);
-                        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-                        callback(null, `${name}-${uniqueSuffix}${fileExtName}`);
+                        callback(null, file.originalname);
                     },
                 });
                 return {
