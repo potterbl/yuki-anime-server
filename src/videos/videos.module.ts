@@ -6,7 +6,6 @@ import {Video, VideoSchema} from "./schemas/video.schema";
 import {Account, AccountSchema} from "../auth/schemas/account.schema";
 import {MulterModule, MulterModuleOptions} from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
-import { extname } from 'path';
 
 @Module({
     providers: [VideosService],

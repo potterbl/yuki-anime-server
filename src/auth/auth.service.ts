@@ -126,7 +126,7 @@ export class AuthService {
                         from: 'yuki.anime.general@gmail.com',
                         subject: 'Reset password',
                         text: 'Your reset link... \n' +
-                            `http://localhost:4000/reset/${jwtToken}`
+                            `http://yuki-animes.netlify.app/reset/${jwtToken}`
                     })
                     .then(res => {
                         console.log(res)
